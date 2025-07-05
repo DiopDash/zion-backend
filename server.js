@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const port = 3001;
+const port = 8000;
 
 // Middleware
 app.use(cors());
@@ -53,7 +53,6 @@ app.post('/api/notion/tasks', async (req, res) => {
     }
 });
 
-// ** NEW ENDPOINT **
 // GET Daily Resets
 app.get('/api/notion/resets', async (req, res) => {
     if (!dashResetDbId) return res.status(500).json({ error: "Reset DB ID is not configured." });
@@ -81,8 +80,6 @@ app.get('/api/notion/resets', async (req, res) => {
     }
 });
 
-// --- Add this block to your server.js ---
-
 // Fallback Chat Endpoint
 app.post('/api/chat', (req, res) => {
     console.log("Received fallback chat request:", req.body.message);
@@ -91,18 +88,6 @@ app.post('/api/chat', (req, res) => {
     res.status(200).json({ 
         response: "My core network seems to be unavailable, but I've received your message through a secondary channel. I am processing your request now." 
     });
-});
-
-// ------------------------------------------
-
-
-// --- Start Server ---
-app.listen(port, () => {
-    console.log("Zion backend is live on port " + port);
-});
-// --- Start Server ---
-app.listen(port, () => {
-    console.log("Zion backend is live on port " + port);
 });
 
 // PATCH Update Subscription
@@ -142,6 +127,7 @@ app.patch('/api/notion/subscriptions/:id', async (req, res) => {
         res.status(500).json({ error: `Failed to update subscription ${id}.` });
     }
 });
+
 // DELETE Archive Subscription
 app.delete('/api/notion/subscriptions/:id', async (req, res) => {
     const { id } = req.params;
@@ -170,4 +156,9 @@ app.delete('/api/notion/subscriptions/:id', async (req, res) => {
         console.error("Notion archive error (Subscription):", error.message);
         res.status(500).json({ error: `Failed to archive subscription ${id}.` });
     }
+});
+
+// --- Start Server --- (ONLY ONE!)
+app.listen(port, () => {
+    console.log(`🚀 Zion backend is live on port ${port}`);
 });
